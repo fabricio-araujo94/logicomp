@@ -16,10 +16,16 @@ formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('
 # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
 
 
-print(formula1 == formula3)
-print(formula1 == formula2)
-print(formula3 == And(Atom('p'), Atom('q')))
+f2 = Or(Atom('p'), Atom('s'))  # (p /\ s)
+f3 = Or(And(Not(Atom('p')), Atom('s')), Atom('t'))  # (¬(p /\ s))
+f5 = And(f2, f3)
 
+print(f3)
+print(is_dnf(f3))
+
+
+
+'''
 print('formula1:', formula1)
 print('formula2:', formula2)
 print('formula3:', formula3)
@@ -48,3 +54,4 @@ for subformula in subformulas(formula8):
 # for example, for formula8:
 print('number of subformulas of formula8:', len(subformulas(formula8)))
 print('len(subformulas(formula8)) <= length(formula8):', len(subformulas(formula8)) <= length(formula8))
+'''
