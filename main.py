@@ -16,14 +16,11 @@ formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('
 # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
 
 
-f2 = Or(Atom('p'), Atom('s'))  # (p /\ s)
-f3 = Or(And(Not(Atom('p')), Atom('s')), Atom('t'))  # (¬(p /\ s))
-f5 = And(f2, f3)
+"""((a V ¬b) ∧ (c V d)) ∨ ((a V b) ∧ (¬c V ¬d)) """
 
-print(f3)
-print(is_dnf(f3))
-
-
+f = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
+print(f)
+print(is_decomposable_negation_normal_form(f))
 
 '''
 print('formula1:', formula1)

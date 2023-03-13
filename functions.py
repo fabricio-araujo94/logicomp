@@ -39,7 +39,7 @@ def subformulas(formula):
 #  we have shown in class that, for all formula A, len(subformulas(A)) <= length(A).
 
 
-def atoms(formula, array=[]):
+def atoms(formula):
     """Returns the set of all atoms occurring in a formula.
 
     For example, observe the piece of code below.
@@ -53,17 +53,12 @@ def atoms(formula, array=[]):
     """
 
     if isinstance(formula, Atom):
-        for atom in array:
-            if formula.name == atom:
-                return
-        array.append(formula.name)
+        return {formula.__str__()}
     if isinstance(formula, Not):
-        atoms(formula.inner, array)
+        return atoms(formula.inner)
     if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
-        atoms(formula.left, array)
-        atoms(formula.right, array)
+        return atoms(formula.left).union(atoms(formula.right))
 
-    return array
 
 
 def number_of_binary_connectives(formula, counter=0):
@@ -209,8 +204,15 @@ def is_dnf(formula):
     if isinstance(formula, Not):
         return is_term(formula)
     if isinstance(formula, Or):
-        if is_term(formula.left) and is_term(formula.right):
-            return True
+        if isinstance(formula.left, Or):
+            sub1 = is_dnf(formula.left)
+        else:
+            sub1 = is_term(formula.left)
+        if isinstance(formula.right, Or):
+            sub2 = is_dnf(formula.right)
+        else:
+            sub2 = is_term(formula.right)
+        return sub1 and sub2
     return False
 
 
@@ -218,4 +220,12 @@ def is_dnf(formula):
 def is_decomposable_negation_normal_form(formula):
     """Returns True if formula is in decomposable negation normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+
+    if is_negation_normal_form(formula):
+        if isinstance(formula, And):
+            if not len(set(atoms(formula.left)).intersection(atoms(formula.right))):
+                return True
+        if isinstance(formula, Or):
+            return is_decomposable_negation_normal_form(formula.left) and is_decomposable_negation_normal_form(formula.right)
+    return False
+
