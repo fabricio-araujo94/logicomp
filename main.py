@@ -3,6 +3,8 @@
 
 from formula import *
 from functions import *
+from semantics import *
+from examples.sudoku import *
 
 
 formula1 = Atom('p')  # p
@@ -18,9 +20,13 @@ formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('
 
 """((a V ¬b) ∧ (c V d)) ∨ ((a V b) ∧ (¬c V ¬d)) """
 
-f = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
-print(f)
-print(is_decomposable_negation_normal_form(f))
+# f = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
+
+
+
+
+sudoku_solution(grid_test1) # Falta algumas funções em semantics
+
 
 '''
 print('formula1:', formula1)

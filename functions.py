@@ -60,24 +60,21 @@ def atoms(formula):
         return atoms(formula.left).union(atoms(formula.right))
 
 
-
-def number_of_binary_connectives(formula, counter=0):
+def number_of_binary_connectives(formula):
     """Returns the number of binary connectives in a formula.
     Binary connectives are connectives thay join two sentences.
     For example: number_of_binary_connectives((p → (¬q))) = 1.
     """
 
+    if isinstance(formula, Atom):
+        return 0
     if isinstance(formula, Not):
-        counter = number_of_binary_connectives(formula.inner, counter)
+        return number_of_binary_connectives(formula.inner)
     if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
-        counter = counter + 1
-        counter = number_of_binary_connectives(formula.left, counter)
-        counter = number_of_binary_connectives(formula.right, counter)
-
-    return counter
+        return number_of_binary_connectives(formula.left) + number_of_binary_connectives(formula.right) + 1
 
 
-def number_of_atoms(formula, counter=0):
+def number_of_atoms(formula):
     """Returns the number of atoms occurring in a formula.
     For instance,
     number_of_atoms(Implies(Atom('q'), And(Atom('p'), Atom('q'))))
@@ -86,28 +83,22 @@ def number_of_atoms(formula, counter=0):
     """
 
     if isinstance(formula, Atom):
-        counter = counter + 1
+        return 1
     if isinstance(formula, Not):
-        counter = number_of_atoms(formula.inner, counter)
+        return number_of_atoms(formula.inner)
     if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
-        counter = number_of_atoms(formula.left, counter)
-        counter = number_of_atoms(formula.right, counter)
-
-    return counter
+        return number_of_atoms(formula.left) + number_of_atoms(formula.right)
 
 
-def number_of_connectives(formula, counter=0):
+def number_of_connectives(formula):
     """Returns the number of connectives occurring in a formula."""
 
+    if isinstance(formula, Atom):
+        return 0
     if isinstance(formula, Not):
-        counter = counter + 1
-        counter = number_of_connectives(formula.inner, counter)
+        return number_of_connectives(formula.inner) + 1
     if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
-        counter = counter + 1
-        counter = number_of_connectives(formula.left, counter)
-        counter = number_of_connectives(formula.right, counter)
-
-    return counter
+        return number_of_connectives(formula.left) + number_of_connectives(formula.right) + 1
 
 
 def is_literal(formula):

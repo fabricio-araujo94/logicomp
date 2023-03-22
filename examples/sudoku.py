@@ -1,8 +1,9 @@
 from semantics import *
 import time
+from math import sqrt
 
 '''
-No sudoku 4x4 é preciso preencher os quadrados de um grid de 4 linhas e 4 colunas com números de 1 a 4, 
+No sudoku 4x4 é preciso preencher os quadrados de um grid de 4 linhas e 4 colunas com números de 1 a 4,
 e eles não podem se repetir na mesma linha, coluna ou subgrid.
 '''
 
@@ -152,14 +153,16 @@ def subgrids_constrains(grid):
     :param grid: sudoku grid
     :return: And formula
     """
+    length = int(sqrt(len(grid)))
+
     subgrids_formulas = []
-    for sl in range(2):
-        for sc in range(2):
+    for sl in range(length):
+        for sc in range(length):
             for n in range(len(grid)):
                 or_list = []
-                for i in range(2):
-                    for j in range(2):
-                        or_list.append(Atom(str(sl * 2 + i + 1) + '_' + str(sc * 2 + j + 1) + '_' + str(n + 1)))
+                for i in range(length):
+                    for j in range(length):
+                        or_list.append(Atom(str(sl * length + i + 1) + '_' + str(sc * length + j + 1) + '_' + str(n + 1)))
                 or_formula = or_all(or_list)
                 subgrids_formulas.append(or_formula)
     return and_all(subgrids_formulas)
