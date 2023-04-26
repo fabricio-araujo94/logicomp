@@ -4,8 +4,6 @@
 from formula import *
 from functions import *
 from semantics import *
-from examples.sudoku import *
-
 
 formula1 = Atom('p')  # p
 formula2 = Atom('q')  # q
@@ -13,20 +11,17 @@ formula3 = And(formula1, formula2)  # (p /\ q)
 formula4 = And(Atom('p'), Atom('s'))  # (p /\ s)
 formula5 = Not(And(Atom('p'), Atom('s')))  # (¬(p /\ s))
 formula6 = Or(Not(And(Atom('p'), Atom('s'))), Atom('q'))  # ((¬(p /\ s)) v q)
-formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  # ((¬(p /\ s)) -> (q /\ r))
-formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s')))))
+formula7 = Implies(And(Atom('p'), Atom('s')), And(Atom('q'), Not(Atom('r'))))  # ((¬(p /\ s)) -> (q /\ r))
+formula8 = Implies(Not(And(Atom('p'), Not(Atom('s')))), And(Atom('q'), Not(And(Atom('p'), Atom('s')))))
 # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
 
 
 """((a V ¬b) ∧ (c V d)) ∨ ((a V b) ∧ (¬c V ¬d)) """
 
 # f = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
-
-
-
-
-sudoku_solution(grid_test1) # Falta algumas funções em semantics
-
+# f1 = And(Atom('p'), Not(Atom('p')))
+print(formula8)
+print(satisfiability_brute_force(formula8))
 
 '''
 print('formula1:', formula1)

@@ -10,7 +10,7 @@ def truth_value(formula, interpretation):
     An interpretation may be defined as dictionary. For example, {'p': True, 'q': False}.
     """
     if isinstance(formula, Atom):
-        return interpretation.get(formula.name)
+        return interpretation.get(formula.name) # the name of the atom is also the name of the key in the dictionary.
     if isinstance(formula, Not):
         if isinstance(formula.inner, Atom):
             return not interpretation.get(formula.inner.name)
@@ -96,7 +96,75 @@ def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
+    
+    vars = atoms(formula) # coleta das atômicas
+    values = {}
+
+    return sat_check(vars, formula, values)
 
 
+def sat_check(vars, formula, values):
+    if not len(vars): 
+       if truth_value(formula, values):
+           return values
+       return False
+
+    var = vars.pop() # selecionando atômica
+
+    values1 = values.copy() 
+    values2 = values.copy()
+    
+    # adicionando atômica ao dicionário da valoração
+    values1[var] = True
+    values2[var] = False
+    
+    check = sat_check(vars.copy(), formula, values1)
+
+    if check != False:
+       return check
+
+    return sat_check(vars.copy(), formula, values2)
+
+"""
+def duplo_satisfativel(formula):
+    check = satisfiability_brute_force(formula)
+    
+    if check == False:
+        return False
+        
+    new_formula = And(formula, Not(And()))
+    
+    if new_formula == False:
+        return False
+        
+    return True
+"""
+
+def all_models(formula):
+    vars = atoms(formula) # coleta das atômicas.
+    tam = 2**len(vars) # quantidade de valorações possíveis.
+    
+    interpretation = {} # dicionário de valorações.
+    
+    # "Setando" todas as variáveis em True.
+    for i in range(0, len(vars)):
+        temp = vars.pop()
+        interpretation[temp] = True
+    
+    # Ordenar as atômicas para melhor visualização.
+    interpretation = dict(sorted(interpretation.items()))
+    # Também é necessário para o laço interno.
+    
+    true_interpretation = [] # lista para armazenar as valorações
+    
+    for i in range(0, tam):
+        if truth_value(formula, interpretation):
+            true_interpretation.append(interpretation.copy())
+    
+        for j, (k, v) in enumerate(interpretation.items()):
+            if j == 0:
+                interpretation[k] = not interpretation[k]
+            elif not (i + 1) % (tam / 2**j):
+                interpretation[k] = not interpretation[k]
+
+    return true_interpretation
