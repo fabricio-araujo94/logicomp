@@ -19,9 +19,13 @@ formula8 = Implies(Not(And(Atom('p'), Not(Atom('s')))), And(Atom('q'), Not(And(A
 """((a V ¬b) ∧ (c V d)) ∨ ((a V b) ∧ (¬c V ¬d)) """
 
 # f = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
-# f1 = And(Atom('p'), Not(Atom('p')))
-print(formula8)
-print(satisfiability_brute_force(formula8))
+f1 = Not(Or(Atom('p'), Atom('q')))
+f2 = And(Not(Atom('p')), Atom('q'))
+
+print(f1)
+print(f2)
+print('')
+print(is_logical_equivalence(f1, f2))
 
 '''
 print('formula1:', formula1)

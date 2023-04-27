@@ -1,2 +1,6 @@
 
 test.py
+main.py
+__pycache__/semantics.cpython-310.pyc
+__pycache__/other_functions.cpython-310.pyc
+__pycache__/functions.cpython-310.pyc

@@ -2,7 +2,8 @@
 
 
 from formula import *
-from functions import atoms
+from functions import *
+from other_functions import *
 
 
 def truth_value(formula, interpretation):
@@ -82,15 +83,41 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
 
 def is_logical_equivalence(formula1, formula2):
     """Checks whether formula1 and formula2 are logically equivalent."""
-    pass
-    # ======== YOUR CODE HERE ========
+    
+    vars = atoms(formula1) # coleta das atômicas.
+    tam = 2**len(vars) # quantidade de valorações possíveis.
+    
+    interpretation = {} # dicionário de valorações.
+    
+    # "Setando" todas as variáveis em True.
+    for i in range(0, len(vars)):
+        temp = vars.pop()
+        interpretation[temp] = True
+    
+    # Ordenar as atômicas para melhor visualização.
+    interpretation = dict(sorted(interpretation.items()))
+    
+    for i in range(0, tam):
+        if not truth_value(formula1, interpretation) and truth_value(formula2, interpretation):
+            return False
+    
+        for j, (k, v) in enumerate(interpretation.items()):
+            if j == 0:
+                interpretation[k] = not interpretation[k]
+            elif not (i + 1) % (tam / 2**j):
+                interpretation[k] = not interpretation[k]
+    
+    return True
+
 
 
 def is_valid(formula):
     """Returns True if formula is a logically valid (tautology). Otherwise, it returns False"""
-    pass
-    # ======== YOUR CODE HERE ========
-
+    
+    if satisfiability_brute_force(Not(formula)) == False:
+        return True
+    
+    return False
 
 def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
@@ -125,20 +152,19 @@ def sat_check(vars, formula, values):
 
     return sat_check(vars.copy(), formula, values2)
 
-"""
-def duplo_satisfativel(formula):
+
+def double_satisfiability(formula):
     check = satisfiability_brute_force(formula)
     
     if check == False:
         return False
         
-    new_formula = And(formula, Not(And()))
+    new_formula = And(formula, Not(and_all(dict_to_atom(check))))
     
-    if new_formula == False:
+    if satisfiability_brute_force(new_formula) == False:
         return False
         
     return True
-"""
 
 def all_models(formula):
     vars = atoms(formula) # coleta das atômicas.
@@ -168,3 +194,4 @@ def all_models(formula):
                 interpretation[k] = not interpretation[k]
 
     return true_interpretation
+    
