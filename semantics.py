@@ -77,8 +77,30 @@ def partial_truth_value(formula, interpretation):
 
 def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
+    
+    formula = and_all(premises) # Será necessário para descobrir uma valoração que deixe todas as premisas verdadeiras.
+    
+    conclusion_atoms = atoms(conclusion) # Necessário para filtrar os valores.
+      
+    while(1):
+        check = satisfiability_brute_force(formula) # Valoração que deixa todas as premissas verdadeiras
+  
+        if check == False: # Quando todas as valorações foram encontradas (ou são inexistentes), o laço é quebrado.
+            break
+        
+        # Filtragem de valores necessários para a conclusão.
+        check_conclusion = {}
+        
+        for k, v in check.items():
+            if k in conclusion_atoms:
+                check_conclusion[k] = v
+          
+        if not truth_value(conclusion, check_conclusion): # Se for falsa, não é consequência lógica.
+            return False
+              
+        formula = And(formula, Not(and_all(dict_to_atom(check)))) # Cria uma nova fórmula negando a valoração encontrada.
+        
+    return True
 
 
 def is_logical_equivalence(formula1, formula2):
