@@ -78,8 +78,15 @@ def partial_truth_value(formula, interpretation):
 def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
     
-    formula = and_all(premises) # Será necessário para descobrir uma valoração que deixe todas as premisas verdadeiras.
-    
+    # Um tratamento para especificar o que foi passado como parâmetro para premisa: uma lista, uma fórmula ou nenhum dos dois.
+    if type(premises) == list:
+        formula = and_all(premises) # Será necessário para descobrir uma valoração que deixe todas as premisas verdadeiras.
+    else:
+        if not atoms(premises) == None:
+            formula = premises
+        else:
+            return 'Premissa inválida.'
+
     conclusion_atoms = atoms(conclusion) # Necessário para filtrar os valores.
       
     while(1):
@@ -94,7 +101,7 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
         for k, v in check.items():
             if k in conclusion_atoms:
                 check_conclusion[k] = v
-          
+
         if not truth_value(conclusion, check_conclusion): # Se for falsa, não é consequência lógica.
             return False
               
@@ -146,6 +153,7 @@ def satisfiability_brute_force(formula):
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
     
+    print(formula)
     vars = atoms(formula) # coleta das atômicas
     values = {}
 
